@@ -30,6 +30,7 @@ import type {
   ThemeMode,
 } from './types/seismic';
 import { generateEventCard45 } from './utils/cardGenerator45';
+import { collectClientFeeds } from './utils/clientFeeds';
 import { exportEventPdf } from './utils/pdfExporter';
 import {
   AGENCY_LABELS,
@@ -139,9 +140,17 @@ export default function App() {
     setLoading(true);
     setFetchError(null);
     try {
-      const res = await fetch('/api/quakes');
-      if (!res.ok) throw new Error('Error de red al consultar boletines');
-      const data = (await res.json()) as QuakesApiResponse;
+      let data: QuakesApiResponse;
+      try {
+        const res = await fetch('./api/quakes');
+        const ctype = res.headers.get('content-type') || '';
+        if (!res.ok || !ctype.includes('application/json')) {
+          throw new Error('Static host mode');
+        }
+        data = (await res.json()) as QuakesApiResponse;
+      } catch {
+        data = await collectClientFeeds();
+      }
       const incoming = data.events || [];
       setEvents(incoming);
       setAgencies(data.agencies || []);

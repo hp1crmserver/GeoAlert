@@ -14,6 +14,7 @@ import type {
   SeverityLevel,
 } from '../types/seismic';
 import { generateEventCard45, generateHistorySummaryCard45 } from '../utils/cardGenerator45';
+import { queryClientHistory } from '../utils/clientFeeds';
 import { exportEventPdf, exportHistoryPdf } from '../utils/pdfExporter';
 import {
   AGENCY_LABELS,
@@ -71,10 +72,28 @@ export default function HistoryView({
         minMag: String(minMag),
         q: searchQuery,
       });
-      const res = await fetch(`/api/quakes/history?${params.toString()}`);
-      if (!res.ok) throw new Error('Error consultando el servidor');
-      const data = (await res.json()) as { events: SeismicEvent[] };
-      setEvents(data.events || []);
+      let fetchedEvents: SeismicEvent[];
+      try {
+        const res = await fetch(`./api/quakes/history?${params.toString()}`);
+        const ctype = res.headers.get('content-type') || '';
+        if (!res.ok || !ctype.includes('application/json')) {
+          throw new Error('Static host mode');
+        }
+        const data = (await res.json()) as { events: SeismicEvent[] };
+        fetchedEvents = data.events || [];
+      } catch {
+        fetchedEvents = await queryClientHistory({
+          startDate,
+          endDate,
+          region,
+          agency,
+          severity,
+          minMag,
+          searchQuery,
+          initialEvents,
+        });
+      }
+      setEvents(fetchedEvents);
       setPage(1);
     } catch {
       setError('No se pudo cargar el historial remoto. Mostrando catálogo local filtrado.');
