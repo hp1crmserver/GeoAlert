@@ -1,0 +1,6 @@
+{
+  "name": "SismoWatch",
+  "description": "Plataforma de monitoreo sísmico global en tiempo real con alertas, avisos y boletines del IGC-UPA Panamá, USGS, EMSC y agencias internacionales, mapas Esri y exportación de reportes.",
+  "requestFramePermissions": [],
+  "majorCapabilities": []
+}

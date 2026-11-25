@@ -1,11 +1,36 @@
-<div align="center">
+# GeoAlert — Monitoreo Sísmico Global
 
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
+Plataforma full-stack (React + Vite + Express) para monitorear en tiempo real alertas, avisos y boletines sísmicos de 12 agencias internacionales (IGC-UPA Panamá, USGS, EMSC, SSN México, SGC Colombia, CSN Chile, NRCan Canadá, JMA Japón, INGV Italia, GeoNet Nueva Zelanda, IGN España y BMKG Indonesia).
 
-  <h1>Built with AI Studio</h2>
+## Requisitos
 
-  <p>The fastest path from prompt to production with Gemini.</p>
+- **Node.js `>= 22.18.0`** (incluido en `.nvmrc` y `package.json` `"engines"` para ejecución directa de `server.ts`).
 
-  <a href="https://aistudio.google.com/apps">Start building</a>
+## Despliegue desde GitHub
 
-</div>
+### Opción 1: Plataformas PaaS (Render, Railway, Heroku, Koyeb, Cloud Run)
+1. Conecta el repositorio de GitHub.
+2. Configura los comandos:
+   - **Build Command:** `npm install && npm run build`
+   - **Start Command:** `npm start`
+3. Variables de entorno opcionales:
+   - `NODE_ENV=production`
+   - `PORT=3000` (o el puerto asignado automáticamente por la plataforma)
+
+### Opción 2: Docker
+```bash
+docker build -t geoalert .
+docker run -p 3000:3000 geoalert
+```
+
+### Opción 3: Ejecución local
+```bash
+npm install
+npm run dev      # Modo desarrollo (puerto 3000)
+```
+
+Para probar localmente en modo producción:
+```bash
+npm run build
+npm start
+```
